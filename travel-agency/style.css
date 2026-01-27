@@ -1,0 +1,58 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    text-align: center;
+    background: url("https://cdn.nhcarrigan.com/splash.png");
+    background-size: cover;
+    background-position: center;
+}
+
+body {
+    width: 95%;
+    max-width: 750px;
+    margin: auto;
+    text-align: left;
+    background-color: #ffddddaa;
+    text-align: center;
+    padding: 10px 20px;
+    margin: 15px auto;
+    border-radius: 30px;
+    color: #117799;
+}
+
+figure {
+    border: 10px inset #553300;
+    margin-bottom: 5px;
+    background: linear-gradient(90deg, #664400, yellow, #664400);
+    filter: drop-shadow(10px 10px 10px);
+    color: black;
+}
+
+img {
+    width: 100%;
+}
+
+ul {
+    display: grid;
+    list-style-type: none;
+    grid-template-areas: "marker text" "marker text";
+    gap: 10px;
+}
+
+li {
+    grid-area: text;
+    text-align: left;
+}
+
+.bullet {
+    grid-area: marker;
+    text-align: right;
+}
+
+a {
+    color: inherit;
+}
