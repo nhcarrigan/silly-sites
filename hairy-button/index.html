@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦱 The Hairy Button 🦱</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Fredoka:wght@400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Fredoka', cursive;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3);
+            background-size: 300% 300%;
+            animation: gradientShift 10s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating background elements */
+        .floating-emoji {
+            position: absolute;
+            font-size: 2rem;
+            animation: float 15s infinite ease-in-out;
+            opacity: 0.7;
+            user-select: none;
+            cursor: pointer;
+            transition: transform 0.3s;
+            z-index: 1;
+        }
+
+        .floating-emoji:hover {
+            transform: scale(1.5) rotate(360deg);
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-100px) translateX(50px) rotate(90deg);
+            }
+            50% {
+                transform: translateY(-50px) translateX(-50px) rotate(180deg);
+            }
+            75% {
+                transform: translateY(-150px) translateX(100px) rotate(270deg);
+            }
+        }
+
+        /* Hair canvas sits above the background but below the content */
+        #hair-canvas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* Main content container */
+        .container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        /* Header */
+        header {
+            animation: bounceIn 1s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            font-family: 'Bungee Shade', cursive;
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            color: #fff;
+            text-shadow: 3px 3px 0 #ff6b6b, 6px 6px 0 #4ecdc4, 9px 9px 0 #45b7d1;
+            margin-bottom: 0.75rem;
+            animation: wiggle 2s ease-in-out infinite;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Button wrapper gives the canvas a reference element to float around */
+        .button-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Extra padding so hairs have breathing room before they reach the edge */
+            padding: 6rem;
+        }
+
+        #hairy-button {
+            font-family: 'Fredoka', cursive;
+            font-size: 1.4rem;
+            font-weight: 700;
+            padding: 18px 48px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+            white-space: nowrap;
+        }
+
+        #hairy-button:hover {
+            background: linear-gradient(135deg, #6a3d96 0%, #5568d6 100%);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+        }
+
+        #hairy-button:active {
+            transform: scale(0.96);
+        }
+
+        /* Click counter */
+        .counter {
+            font-size: 1.15rem;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            min-height: 1.8rem;
+            transition: transform 0.15s ease;
+        }
+
+        .counter.bump {
+            transform: scale(1.15);
+        }
+
+        /* Back link */
+        .back-link {
+            font-size: 1rem;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 2px solid transparent;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            transition: border-color 0.3s;
+        }
+
+        .back-link:hover {
+            border-color: #fff;
+        }
+
+        /* Cursor trail */
+        .cursor-trail {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Accessibility */
+        #hairy-button:focus-visible {
+            outline: 3px solid #4ecdc4;
+            outline-offset: 4px;
+        }
+
+        .back-link:focus-visible {
+            outline: 3px solid #4ecdc4;
+            outline-offset: 3px;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hair-themed floating background elements -->
+    <div class="floating-emoji" style="top: 8%;  left: 8%;  animation-delay: 0s;">🦱</div>
+    <div class="floating-emoji" style="top: 15%; left: 82%; animation-delay: 2s;">✂️</div>
+    <div class="floating-emoji" style="top: 65%; left: 6%;  animation-delay: 4s;">💈</div>
+    <div class="floating-emoji" style="top: 72%; left: 88%; animation-delay: 6s;">🪮</div>
+    <div class="floating-emoji" style="top: 35%; left: 92%; animation-delay: 8s;">🦱</div>
+    <div class="floating-emoji" style="top: 82%; left: 45%; animation-delay: 10s;">✂️</div>
+    <div class="floating-emoji" style="top: 50%; left: 3%;  animation-delay: 12s;">💈</div>
+    <div class="floating-emoji" style="top: 20%; left: 55%; animation-delay: 14s;">🪮</div>
+
+    <canvas id="hair-canvas"></canvas>
+
+    <div class="container">
+        <header>
+            <h1>The Hairy Button</h1>
+            <p class="subtitle">Click it. Go on. See what happens~</p>
+        </header>
+
+        <div class="button-wrapper">
+            <button id="hairy-button">Click me!</button>
+        </div>
+
+        <p class="counter" id="counter"></p>
+
+        <a href="/" class="back-link">← Back to the Carnival</a>
+    </div>
+
+    <script>
+        const canvas  = document.getElementById('hair-canvas');
+        const ctx     = canvas.getContext('2d');
+        const button  = document.getElementById('hairy-button');
+        const counter = document.getElementById('counter');
+
+        const HAIR_COUNT       = 350;
+        const GROWTH_PER_CLICK = 7;
+
+        let hairLength = 0;
+        let clickCount = 0;
+        let hairs      = [];
+
+        function resizeCanvas() {
+            canvas.width  = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function generateHairs() {
+            hairs = [];
+            const rect      = button.getBoundingClientRect();
+            const w         = rect.width;
+            const h         = rect.height;
+            const perimeter = 2 * (w + h);
+
+            for (let i = 0; i < HAIR_COUNT; i++) {
+                const dist = (i / HAIR_COUNT) * perimeter;
+
+                let x, y, baseAngle;
+
+                if (dist < w) {
+                    x         = rect.left + dist;
+                    y         = rect.top;
+                    baseAngle = -Math.PI / 2;
+                } else if (dist < w + h) {
+                    x         = rect.right;
+                    y         = rect.top + (dist - w);
+                    baseAngle = 0;
+                } else if (dist < 2 * w + h) {
+                    x         = rect.right - (dist - w - h);
+                    y         = rect.bottom;
+                    baseAngle = Math.PI / 2;
+                } else {
+                    x         = rect.left;
+                    y         = rect.bottom - (dist - 2 * w - h);
+                    baseAngle = Math.PI;
+                }
+
+                const r = 50 + Math.floor(Math.random() * 30);
+                const g = 30 + Math.floor(Math.random() * 20);
+                const b = 10 + Math.floor(Math.random() * 15);
+                const a = (0.55 + Math.random() * 0.4).toFixed(2);
+
+                hairs.push({
+                    x,
+                    y,
+                    angle:         baseAngle + (Math.random() - 0.5) * 0.8,
+                    lengthFactor:  0.5 + Math.random() * 1.0,
+                    curvature:     (Math.random() - 0.5) * 1.4,
+                    thickness:     0.3 + Math.random() * 0.55,
+                    colour:        `rgba(${r}, ${g}, ${b}, ${a})`,
+                });
+            }
+        }
+
+        function drawHairs() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (hairLength <= 0) return;
+
+            hairs.forEach(hair => {
+                const length = hairLength * hair.lengthFactor;
+                const endX   = hair.x + Math.cos(hair.angle) * length;
+                const endY   = hair.y + Math.sin(hair.angle) * length;
+
+                const midX  = hair.x + Math.cos(hair.angle) * length * 0.5;
+                const midY  = hair.y + Math.sin(hair.angle) * length * 0.5;
+                const perpX = Math.cos(hair.angle + Math.PI / 2);
+                const perpY = Math.sin(hair.angle + Math.PI / 2);
+                const ctrlX = midX + perpX * hair.curvature * length * 0.3;
+                const ctrlY = midY + perpY * hair.curvature * length * 0.3;
+
+                ctx.beginPath();
+                ctx.moveTo(hair.x, hair.y);
+                ctx.quadraticCurveTo(ctrlX, ctrlY, endX, endY);
+                ctx.strokeStyle = hair.colour;
+                ctx.lineWidth   = hair.thickness;
+                ctx.lineCap     = 'round';
+                ctx.stroke();
+            });
+        }
+
+        function hairinessLabel(length) {
+            if (length === 0)   return '';
+            if (length < 20)    return 'It\'s developing some stubble... 🪒';
+            if (length < 50)    return 'Getting a little scruffy! 🧔';
+            if (length < 100)   return 'Positively fluffy! 🦱';
+            if (length < 180)   return 'It needs a trim. 💈';
+            if (length < 280)   return 'The button is a whole vibe now. ✂️';
+            if (length < 400)   return 'This button has seen things. 😳';
+            return 'Someone PLEASE call a barber!! 🆘';
+        }
+
+        function updateCounter() {
+            const label = hairinessLabel(hairLength);
+            counter.textContent = label
+                ? `Clicks: ${clickCount} — ${label}`
+                : '';
+        }
+
+        function bumpCounter() {
+            counter.classList.remove('bump');
+            // Force reflow so re-adding the class triggers the transition again
+            void counter.offsetWidth;
+            counter.classList.add('bump');
+        }
+
+        button.addEventListener('click', () => {
+            clickCount++;
+            hairLength += GROWTH_PER_CLICK;
+            drawHairs();
+            updateCounter();
+            bumpCounter();
+        });
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            generateHairs();
+            drawHairs();
+        });
+
+        // Cursor trail
+        const trails    = [];
+        const maxTrails = 10;
+
+        document.addEventListener('mousemove', (e) => {
+            if (trails.length >= maxTrails) {
+                trails.shift().remove();
+            }
+
+            const trail       = document.createElement('div');
+            trail.className   = 'cursor-trail';
+            trail.style.left  = e.clientX + 'px';
+            trail.style.top   = e.clientY + 'px';
+            trail.style.background = `hsl(${Math.random() * 360}, 100%, 70%)`;
+            document.body.appendChild(trail);
+            trails.push(trail);
+
+            setTimeout(() => {
+                trail.style.transform  = 'scale(0)';
+                trail.style.transition = 'transform 0.3s ease';
+                setTimeout(() => {
+                    const index = trails.indexOf(trail);
+                    if (index > -1) trails.splice(index, 1);
+                    trail.remove();
+                }, 300);
+            }, 100);
+        });
+
+        // Click floating emojis to change them
+        const hairEmojis = ['🦱', '✂️', '💈', '🪮', '🧔', '🪒', '🦲', '💇'];
+
+        document.querySelectorAll('.floating-emoji').forEach(emoji => {
+            emoji.addEventListener('click', function() {
+                this.textContent = hairEmojis[Math.floor(Math.random() * hairEmojis.length)];
+            });
+        });
+
+        // Initialise
+        resizeCanvas();
+        generateHairs();
+        drawHairs();
+
+        // Console easter egg
+        console.log('%c🦱 The Hairy Button 🦱', 'font-size: 24px; color: #764ba2; font-weight: bold;');
+        console.log('%cYou opened the console instead of clicking the button?? weirdo', 'font-size: 14px; color: #4ecdc4;');
+    </script>
+</body>
+<script defer="" src="https://analytics.nhcarrigan.com/js/pa-YUXAn1vhhRttySUAw_LMN.js"></script>
+<script>
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+    plausible.init({
+      customProperties: {
+        domain: "silly.nhcarrigan.com",
+        page: "The Hairy Button",
+        path: "/hairy-button/",
+      },
+    })
+</script>
+<script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3569924701890974" crossorigin="anonymous"></script>
+</html>
